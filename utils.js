@@ -1,7 +1,7 @@
 //UTILS
 function numFromRGB(str) {
-	let sep = str.indexOf(',') > -1 ? ',' : ' ';
-	return str.substr(4).split(')')[0].split(sep).map(Number);
+	let sep = str.indexOf(",") > -1 ? "," : " ";
+	return str.substr(4).split(")")[0].split(sep).map(Number);
 }
 
 function median(arr /* array */) {
@@ -11,13 +11,12 @@ function median(arr /* array */) {
 }
 
 function RGBToHSL(rgb) {
-	let sep = rgb.indexOf(',') > -1 ? ',' : ' ';
-	rgb = rgb.substr(4).split(')')[0].split(sep);
+	let sep = rgb.indexOf(",") > -1 ? "," : " ";
+	rgb = rgb.substr(4).split(")")[0].split(sep);
 
 	for (let R in rgb) {
 		let r = rgb[R];
-		if (r.indexOf('%') > -1)
-			rgb[R] = Math.round((r.substr(0, r.length - 1) / 100) * 255);
+		if (r.indexOf("%") > -1) rgb[R] = Math.round((r.substr(0, r.length - 1) / 100) * 255);
 	}
 
 	// Make r, g, and b fractions of 1
@@ -112,15 +111,15 @@ function createEnum(values) {
 }
 
 function showHide(boolVal, element) {
-	console.log(
-		'showHide: ' + boolVal + ': ' + element.firstElementChild.innerText
-	);
+	// console.log(
+	// 	'showHide: ' + boolVal + ': ' + element.firstElementChild.innerText
+	// );
 	if (boolVal) {
-		element.classList.add('hide');
+		element.classList.add("hide");
 	} else {
-		element.classList.remove('hide');
+		element.classList.remove("hide");
 	}
 }
 //END UTILS
 
-export { throttle, debounce, filter, createEnum, showHide };
+export { throttle, debounce, filter, createEnum, showHide, RGBToHSL };

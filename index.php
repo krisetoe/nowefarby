@@ -76,14 +76,15 @@
 					<div id="ranger">
 						<div id="indicator" data-clicked=-1 data-position=0></div>
 						<div id="color_strip"></div>
-						<div><button id="reset_range" type="button">resetuj</button></div>
-						<div>
-							<button id="plus_range" type="button" data-mod=1>+</button>
-							<button id="minus_range" type="button" data-mod=-1>-</button>
+						<div id="strip-buttons">
+							<div><button id="reset_range" type="button">resetuj</button></div>
+							<div>
+								<button id="plus_range" type="button" data-mod=1>+</button>
+								<button id="minus_range" type="button" data-mod=-1>-</button>
+							</div>
 						</div>
-					</div>
-					<div id="strip-buttons">
-						
+
+
 				</fieldset>
 
 			</div>

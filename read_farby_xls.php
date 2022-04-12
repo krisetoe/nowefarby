@@ -39,7 +39,8 @@ wymagane (require_once):
 //Domyslnie przez polaczenie serwera archiwum (etykiet na przygotowalni) z etiko_srv w katalogu Graficy/Farby/
 class FarbyXls 
 {
-	public $path='./FARBY.xls'; //sciezka do pliku FARBY.xls domyslnie bedzie = '../../Graficy/Farby/FARBY.xls';
+	public $path='../../Zasoby/farby/FARBY.xls';
+	//public $path='./FARBY.xls'; //sciezka do pliku FARBY.xls domyslnie bedzie = '../../Graficy/Farby/FARBY.xls';
 	public $pantone_path="lib/pantone_rgb.list"; //sciezka do pliku z lista kolorow Pantone w formacie nazwa C\tR\tG\tB 
 	public $id = 'tabela_farby';
 	private $sheet_index=1; //przechowuje numer arkusza zawierajacego spis farb

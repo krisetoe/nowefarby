@@ -51,11 +51,7 @@ td.metalize {
 			rgba(255, 255, 255, 0.35),
 			rgba(255, 255, 255, 0.05)
 		),
-		radial-gradient(
-			circle,
-			rgba(255, 255, 255, 0.5),
-			rgba(255, 255, 255, 0.05)
-		);
+		radial-gradient(circle, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.05));
 }
 
 td.old {
@@ -63,7 +59,7 @@ td.old {
 }
 
 td.old::after {
-	content: 'stara';
+	content: "stara";
 	color: white;
 	font-size: 2 rem;
 	display: inline-block;
@@ -134,7 +130,7 @@ td.old::after {
 
 .tooltip::after,
 .tooltip::before {
-	content: '';
+	content: "";
 	position: absolute;
 	top: 30%;
 	left: -10px;
@@ -171,7 +167,7 @@ td.old::after {
 }
 
 #metalic_range:hover::after {
-	content: 'metalic';
+	content: "metalic";
 	position: absolute;
 	left: 0;
 	top: 10px;
@@ -203,7 +199,7 @@ legend {
 }
 
 .field1 {
-	top: -13px;
+	top: -9px;
 	height: 74px;
 }
 
@@ -323,7 +319,7 @@ legend {
 }
 
 #ranger #indicator::before {
-	content: '';
+	content: "";
 	position: absolute;
 	top: 0px;
 	left: 50%;

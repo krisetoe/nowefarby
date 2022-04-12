@@ -1,4 +1,4 @@
-import { filter, throttle, debounce, showHide } from './utils';
+import { filter, throttle, debounce, showHide, RGBToHSL } from "./utils";
 /* 
 wersja: 2022-04-08
 WYMAGANE BIBLIOTEKI: - jeszcze narazie!
@@ -8,26 +8,22 @@ lib\jquery.min.js (3.4.1)
 */
 
 const T_SELECTORS = {
-	textInput: '#input_filtruj',
-	table: '#tabela_farby',
-	tbody: '#tabela_farby tbody',
-	row: '#tabela_farby tbody tr',
-	nameCol: '#tabela_farby tbody tr:first',
-	checkOld: '#check_hide_old',
-	checkEmpty: '#check_empty',
-	ind: '#indicator',
-	plus: '#plus_range',
-	minus: '#minus_range',
+	textInput: "#input_filtruj",
+	table: "#tabela_farby",
+	tbody: "#tabela_farby tbody",
+	row: "#tabela_farby tbody tr",
+	nameCol: "#tabela_farby tbody tr:first",
+	checkOld: "#check_hide_old",
+	checkEmpty: "#check_empty",
+	ind: "#indicator",
+	plus: "#plus_range",
+	minus: "#minus_range",
 };
 Object.freeze(T_SELECTORS);
 
 function syncFilters() {
-	const inputText = document
-		.querySelector(T_SELECTORS.textInput)
-		.value.toLowerCase();
-	const rows = document
-		.querySelector(T_SELECTORS.tbody)
-		.getElementsByTagName('tr');
+	const inputText = document.querySelector(T_SELECTORS.textInput).value.toLowerCase();
+	const rows = document.querySelector(T_SELECTORS.tbody).getElementsByTagName("tr");
 
 	const oldChecked = document.querySelector(T_SELECTORS.checkOld).checked;
 
@@ -35,16 +31,17 @@ function syncFilters() {
 
 	filter(rows, (el) => {
 		//console.log(el.nodeName);
+		let colorPrev = el.querySelector(".cprev");
 		let text = el.firstElementChild.innerText.toLowerCase();
-		let filterPatern = '';
-		filterPatern +=
-			inputText != '' && text.indexOf(inputText) == -1 ? 0 : 1;
-		filterPatern += el.classList.contains('old') && oldChecked ? 0 : 1;
-		filterPatern += el.classList.contains('empty') && emptyChecked ? 0 : 1;
-		const isOut = filterPatern.indexOf('0') > -1;
-		console.log(
-			isOut ? 'ukrty(e)' : text + ': filterPatern: ' + filterPatern
-		);
+		let filterPatern = "";
+		filterPatern += inputText != "" && text.indexOf(inputText) == -1 ? 0 : 1;
+		filterPatern += el.classList.contains("old") && oldChecked ? 0 : 1;
+		filterPatern += el.classList.contains("empty") && emptyChecked ? 0 : 1;
+		filterPatern += filterColor(colorPrev);
+		const isOut = filterPatern.indexOf("0") > -1;
+
+		//console.log(text + ": " + colorPrev.style.backgroundColor);
+		//console.log(isOut ? "ukrty(e)" : text + ": filterPatern: " + filterPatern);
 		showHide(isOut, el);
 	});
 
@@ -76,22 +73,22 @@ function syncFilters() {
 	} */
 }
 
-let strip = document.querySelector('#color_strip');
-let ind = document.querySelector('#indicator');
-let plus = document.querySelector('#plus_range');
-let minus = document.querySelector('#minus_range');
+let strip = document.querySelector("#color_strip");
+let ind = document.querySelector("#indicator");
+let plus = document.querySelector("#plus_range");
+let minus = document.querySelector("#minus_range");
 
 function setIndicator(e) {
-	if (e.target.id === 'reset_range') {
-		ind.style.width = '10px';
-		ind.style.display = 'none';
+	if (e.target.id === "reset_range") {
+		ind.style.width = "10px";
+		ind.style.display = "none";
 		return;
 	}
 
-	if (ind.style.display === 'none') {
-		ind.style.display = 'block';
-		ind.style.width = '10px';
-		ind.style.left = '180px';
+	if (ind.style.display === "none") {
+		ind.style.display = "block";
+		ind.style.width = "10px";
+		ind.style.left = "180px";
 	}
 
 	moveIndTo(e);
@@ -116,22 +113,24 @@ function moveIndTo(e) {
 	const indl = ind.offsetLeft;
 
 	//setIndPos(indl, sclicked.x + indl - indc)
-
-	ind.style.left =
+	const pos =
 		sclicked.x + indc >= target.clientWidth
-			? target.clientWidth - ind.clientWidth + 'px'
+			? target.clientWidth - ind.clientWidth
 			: sclicked.x - indc <= 0
 			? 0
-			: sclicked.x - indc + 'px';
+			: sclicked.x - indc;
+	ind.style.left = pos + "px";
+	ind.dataset.position = pos;
 
+	syncFilters();
 	//console.log('sclicked.x + indc = ' + (sclicked.x + indc))
 	//console.log('sclicked.x = ' + sclicked.x)
 	//console.log('indc = ' + indc)
-	console.log('indicator pos: ' + sclicked.x);
+	//console.log("[mIT] indicator pos: " + pos);
 }
 
 function setIndPos(left, offset, center) {
-	console.log('left: ' + left, 'offset: ' + offset + ' center: ' + center);
+	//console.log("left: " + left, "offset: " + offset + " center: " + center);
 
 	const indc = offset / 2;
 	let pos = left - indc + center;
@@ -145,7 +144,10 @@ function setIndPos(left, offset, center) {
 	}
 
 	ind.dataset.position = pos;
-	ind.style.left = pos + 'px';
+	ind.style.left = pos + "px";
+
+	syncFilters();
+	//console.log("[sIP] indicator pos: " + pos);
 }
 
 function waitWithClick(target, delay = 250) {
@@ -153,12 +155,6 @@ function waitWithClick(target, delay = 250) {
 		//console.log('after delay clicked before = ' + target.dataset.clicked);
 		target.dataset.clicked = -1;
 	}, delay);
-}
-
-function setRangeInd(e) {
-	const button = e.target;
-
-	changeRangeInd(ind, button.dataset.mod);
 }
 
 function changeRangeInd(e) {
@@ -171,8 +167,7 @@ function changeRangeInd(e) {
 	let offset = 0;
 	switch (el) {
 		case ind:
-			center =
-				mouseX - el.getBoundingClientRect().left - el.offsetWidth / 2;
+			center = mouseX - el.getBoundingClientRect().left - el.offsetWidth / 2;
 			//console.log(id + " is clicked");
 			if (e.altKey) {
 				offset = -10;
@@ -214,7 +209,7 @@ function changeRangeInd(e) {
 	let newWidth = basewidth + offset;
 	//console.log(newWidth);
 	if (newWidth >= 10 && newWidth <= 80 && offset != 0) {
-		el.style.width = newWidth + 'px';
+		el.style.width = newWidth + "px";
 		//console.log("el.style.width = " + el.style.width);
 	}
 
@@ -226,36 +221,51 @@ function changeRangeInd(e) {
 	waitWithClick(el, 250);
 }
 //After document content is loaded
-window.addEventListener('DOMContentLoaded', (event) => {
-	//console.log('DOM fully loaded and parsed');
-	$('#input_filtruj').val('');
-	$('#check_metalic').prop('checked', false);
-	$('#check_hide_old').prop('checked', false);
-	$('#check_empty').prop('checked', false);
+window.addEventListener("DOMContentLoaded", (event) => {
+	// Events
+	// $("#input_filtruj").val("");
+	// $("#check_metalic").prop("checked", false);
+	// $("#check_hide_old").prop("checked", false);
+	// $("#check_empty").prop("checked", false);
 
-	$('#input_filtruj').on('keyup', syncFilters);
-	$('#check_metalic').on('click', syncFilters);
-	$('#check_hide_old').on('click', syncFilters);
-	$('#check_empty').on('click', syncFilters);
+	$("#input_filtruj").on("keyup", syncFilters);
+	$("#check_metalic").on("click", syncFilters);
+	$("#check_hide_old").on("click", syncFilters);
+	$("#check_empty").on("click", syncFilters);
 
-	strip = document.querySelector('#color_strip');
-	ind = document.querySelector('#indicator');
-	plus = document.querySelector('#plus_range');
-	minus = document.querySelector('#minus_range');
-	plus.addEventListener('click', changeRangeInd);
-	minus.addEventListener('click', changeRangeInd);
-	ind.addEventListener('click', changeRangeInd);
-
-	/*ind.addEventListener('mouseup', (e) => {
-		e.target.onmousemove = null;
-		//console.log(e.target.id + ' - mousemove usunięte?')
-	});*/
-	// strip.addEventListener('mousedown', moveIndTo);
-	strip.addEventListener('mousedown', setIndicator);
-	document
-		.querySelector('#reset_range')
-		.addEventListener('mouseup', setIndicator);
+	strip = document.querySelector("#color_strip");
+	ind = document.querySelector("#indicator");
+	plus = document.querySelector("#plus_range");
+	minus = document.querySelector("#minus_range");
+	plus.addEventListener("click", changeRangeInd);
+	minus.addEventListener("click", changeRangeInd);
+	ind.addEventListener("click", changeRangeInd);
+	strip.addEventListener("mousedown", setIndicator);
+	document.querySelector("#reset_range").addEventListener("mouseup", setIndicator);
 });
+
+function filterColor(colorPrev) {
+	let rgb = colorPrev.style.backgroundColor;
+	let filter = "";
+	let hueSpace = 360;
+	let calibration = 45;
+	let a = hueSpace - parseInt(ind.dataset.position) - calibration;
+	let b = hueSpace - parseInt(ind.dataset.position) + ind.offsetWidth - calibration;
+
+	//console.log(rgb);
+
+	if (rgb === "") return 0;
+
+	let hsl = RGBToHSL(rgb);
+	console.log("hsl: " + hsl + " / indScope: " + [a, b]);
+	if (hueSpace - hsl[0] <= a || hueSpace - hsl[1] >= b) {
+		filter += 0;
+	} else {
+		filter += 1;
+	}
+
+	return filter;
+}
 
 //stare śmieciowate
 
