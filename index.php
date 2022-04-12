@@ -2,11 +2,15 @@
 	require_once 'lib/excel_reader2.php';
 	//require_once 'lib/excel_reader/excel_reader.php';
 	require_once 'read_farby_xls.php';
+	require_once 'xlsres.php';
+
+
 
 	error_reporting(E_ALL ^ E_NOTICE);
 	ini_set('display_errors',1); 
 
-	$Farby = new FarbyXls();
+	$Farby = new FarbyXls($XLS_PATH);
+	//$Farby->setXlsPath($XLS_PATH);
 ?>
 <!DOCTYPE html>
 <html lang="pl">

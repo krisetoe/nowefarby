@@ -63,8 +63,9 @@ class FarbyXls
 	public $Tnot_metalize = array('801','809');
 	
 	//Konstruktor obiektu
-	function __construct()
+	function __construct($path=null)
     {
+		$this->setXlsPath($path);
 		$spreadsheet = new Spreadsheet_Excel_Reader();
 		//$spreadsheet = new PhpExcelReader();
 		$spreadsheet->setOutputEncoding('UTF-8');
@@ -97,6 +98,12 @@ class FarbyXls
 		
 
     }//end function __construct() 
+
+	public function setXlsPath($path){
+		if($path!=null){
+			$this->path = $path;
+		}
+	}
 
 	//Metoda formatuje dane z $this->$table_sheet[row][col] do tablicy html i zapisuje wynik w $this->$html_table
 	public function formatToHtmlTable(){
