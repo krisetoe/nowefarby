@@ -24,7 +24,7 @@ const T_SELECTORS = {
 };
 Object.freeze(T_SELECTORS);
 
-function syncFilters(reset = false) {
+function syncFilters() {
 	const inputText = document.querySelector(T_SELECTORS.textInput).value.toLowerCase();
 	const rows = document.querySelector(T_SELECTORS.tbody).getElementsByTagName("tr");
 
@@ -40,7 +40,7 @@ function syncFilters(reset = false) {
 		filterPatern += inputText != "" && text.indexOf(inputText) == -1 ? 0 : 1;
 		filterPatern += el.classList.contains("old") && oldChecked ? 0 : 1;
 		filterPatern += el.classList.contains("empty") && emptyChecked ? 0 : 1;
-		if (!reset) {
+		if (ind.style.display != "none") {
 			filterPatern += filterColor(colorPrev);
 		}
 		const isOut = filterPatern.indexOf("0") > -1;
@@ -85,7 +85,7 @@ function setIndicator(e) {
 		ind.style.left = "0px";
 		ind.dataset.position = 0;
 		ind.style.display = "none";
-		setTimeout(syncFilters, 150, true);
+		setTimeout(syncFilters, 150);
 		return;
 	}
 
@@ -247,6 +247,8 @@ window.addEventListener("DOMContentLoaded", (event) => {
 	ind = document.querySelector("#indicator");
 	plus = document.querySelector("#plus_range");
 	minus = document.querySelector("#minus_range");
+
+	ind.style.display = "none";
 	plus.addEventListener("click", changeRangeInd);
 	minus.addEventListener("click", changeRangeInd);
 	ind.addEventListener("click", changeRangeInd);
@@ -259,7 +261,7 @@ function filterColor(colorPrev) {
 
 	if (rgb === "") return 0;
 
-	let filter = "";
+	let offset = 0;
 	let calibration = 54;
 	let indStart = parseInt(ind.dataset.position) - calibration;
 	let indEnd = indStart + ind.offsetWidth;
@@ -274,31 +276,27 @@ function filterColor(colorPrev) {
 	if (indEnd < 0) {
 		indEnd + 360;
 	}
-	// console.log("start,end:" + [indStart, indEnd] + " / indWidth: " + ind.offsetWidth);
-	if (indEnd < indStart) {
+	// console.log("start,end:" + [indStart, indEnd]);
+	/*if (indEnd < indStart) {
 		indEnd = indStart + ind.offsetWidth;
 		indStart = indEnd - ind.offsetWidth;
-	}
+	}*/
 
-	//console.log("indStart: " + indStart + " / ind a,b: " + [indStart, indEnd]);
+	console.log("ind a,b: " + [indStart, indEnd] + "/ H: " + hsl[0]);
+
 	//let min = hsl[0] + indStart;
 	//let max = indEnd - hsl[0];
 	//console.log(rgb);
 
-	if (hsl[0] >= indStart && hsl[0] < indEnd && hsl[2] > 28 && hsl[2] < 76 && hsl[1] > 24) {
-		// console.log(
-		// 	colorPrev.parentElement.firstElementChild.innerText +
-		// 		"::hsl: " +
-		// 		hsl +
-		// 		" / ind a,b: " +
-		// 		[indStart, indEnd]
-		// );
-		filter += 1;
-	} else {
-		filter += 0;
+	if (indStart > indEnd) {
+		offset = 360;
 	}
 
-	return filter;
+	if (hsl[0] >= indStart - offset && hsl[0] <= indEnd && hsl[2] > 28 && hsl[2] < 76 && hsl[1] > 24) {
+		return 1;
+	}
+
+	return 0;
 }
 
 //stare śmieciowate
