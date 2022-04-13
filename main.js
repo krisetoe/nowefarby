@@ -265,7 +265,7 @@ function filterColor(colorPrev) {
 	let calibration = 54;
 	let indStart = parseInt(ind.dataset.position) - calibration;
 	let indEnd = indStart + ind.offsetWidth;
-	let hsl = RGBToHSL(rgb);
+	let [h, s, l] = RGBToHSL(rgb);
 	//indStart = indStart < 0 ? 360 + indStart : indStart;
 	//indEnd = indEnd < 0 ? 360 + indEnd : indEnd;
 
@@ -282,8 +282,6 @@ function filterColor(colorPrev) {
 		indStart = indEnd - ind.offsetWidth;
 	}*/
 
-	console.log("ind a,b: " + [indStart, indEnd] + "/ H: " + hsl[0]);
-
 	//let min = hsl[0] + indStart;
 	//let max = indEnd - hsl[0];
 	//console.log(rgb);
@@ -292,70 +290,22 @@ function filterColor(colorPrev) {
 		offset = 360;
 	}
 
-	if (hsl[0] >= indStart - offset && hsl[0] <= indEnd && hsl[2] > 28 && hsl[2] < 76 && hsl[1] > 24) {
+	if (h >= indStart - offset && h <= indEnd && l > 10 && l < 82 && s > 10) {
+		console.log(
+			"ind a,b: " +
+				[indStart, indEnd] +
+				"/ farba: " +
+				colorPrev.parentNode.firstElementChild.innerText +
+				" / HSL: " +
+				h +
+				", " +
+				l +
+				" , " +
+				l
+		);
+
 		return 1;
 	}
 
 	return 0;
 }
-
-//stare śmieciowate
-
-/* function filterRange() {
-	$('#tabela_farby tbody tr')
-		.filter(function () {
-			let el = $(this).find('.cprev');
-
-			let color_attr = el.css('background-color').toLowerCase();
-
-			let hsl = [0, 0, 0];
-			hsl = RGBToHSL(color_attr);
-			console.log(hsl);
-
-			let scope = '';
-
-			if (el.hasClass('metalize')) {
-				if ($('div#metalic_range').attr('data-cr-choose') < 0) {
-					return true;
-					//$("#tabela_farby tbody tr").filter(":not(.metalize)").hide(); //function() {
-				}
-				//console.log(el);
-				return false;
-			}
-
-			ranges_map.forEach((el) => {
-				if (el.tag.getAttribute('data-cr-choose') < 0) {
-					scope += '0';
-				} else {
-					scope += '1';
-				}
-			});
-			console.log('scope: ' + scope);
-			return scope.indexOf('0') > 0 ? true : false;
-			//TODO: Oprogramować filtrowanie
-		})
-		.hide();
-}
-
-function changeRangeFiltering(e) {
-	let ranges = $('#color_range fieldset').children('div');
-
-	if (e.altKey) {
-		this.dataset.crChoose = 1;
-		[...ranges].forEach((el, index, arr) => {
-			if (arr[index].id != this.id) {
-				arr[index].dataset.crChoose = -1;
-			}
-		});
-	} else if (e.ctrlKey) {
-		[...ranges].forEach((el, index, arr) => {
-			arr[index].dataset.crChoose = 1;
-		});
-	} else {
-		this.dataset.crChoose = -this.dataset.crChoose;
-	}
-	//this.dataset.crChoose = -this.dataset.crChoose;
-
-	syncFilters();
-}
- */
