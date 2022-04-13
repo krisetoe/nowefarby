@@ -79,7 +79,7 @@
 					</legend>
 					<div id="ranger">
 						<div id="indicator" data-clicked=-1 data-position=0></div>
-						<div id="color_strip"></div>
+						<div id="color_strip" data-info=''></div>
 						<div id="strip-buttons">
 							<div><button id="reset_range" type="button">resetuj</button></div>
 							<div>

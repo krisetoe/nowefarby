@@ -6,6 +6,9 @@ WYMAGANE BIBLIOTEKI: - jeszcze narazie!
 lib\ac-colors.min.js
 lib\jquery.min.js (3.4.1)
 */
+const T_INFOS = {
+	filtering: "- filtrowanie -",
+};
 
 const T_SELECTORS = {
 	textInput: "#input_filtruj",
@@ -21,7 +24,7 @@ const T_SELECTORS = {
 };
 Object.freeze(T_SELECTORS);
 
-function syncFilters() {
+function syncFilters(reset = false) {
 	const inputText = document.querySelector(T_SELECTORS.textInput).value.toLowerCase();
 	const rows = document.querySelector(T_SELECTORS.tbody).getElementsByTagName("tr");
 
@@ -37,14 +40,16 @@ function syncFilters() {
 		filterPatern += inputText != "" && text.indexOf(inputText) == -1 ? 0 : 1;
 		filterPatern += el.classList.contains("old") && oldChecked ? 0 : 1;
 		filterPatern += el.classList.contains("empty") && emptyChecked ? 0 : 1;
-		filterPatern += filterColor(colorPrev);
+		if (!reset) {
+			filterPatern += filterColor(colorPrev);
+		}
 		const isOut = filterPatern.indexOf("0") > -1;
 
 		//console.log(text + ": " + colorPrev.style.backgroundColor);
 		//console.log(isOut ? "ukrty(e)" : text + ": filterPatern: " + filterPatern);
 		showHide(isOut, el);
 	});
-
+	strip.dataset.info = "";
 	/* $("#tabela_farby tbody tr").filter(function () {
 		$(this).toggle($(this).children(":first").text().toLowerCase().indexOf(value) > -1);
 	});
@@ -76,10 +81,11 @@ let minus = document.querySelector("#minus_range");
 
 function setIndicator(e) {
 	if (e.target.id === "reset_range") {
-		ind.style.width = "361px";
+		ind.style.width = "300px";
 		ind.style.left = "0px";
 		ind.dataset.position = 0;
 		ind.style.display = "none";
+		setTimeout(syncFilters, 150, true);
 		return;
 	}
 
@@ -122,8 +128,8 @@ function moveIndTo(e) {
 	ind.dataset.position = pos;
 	ind.style.left = pos + "px";
 
-	waitWithClick(target, 100);
-	//syncFilters();
+	strip.dataset.info = T_INFOS.filtering;
+	setTimeout(syncFilters, 250);
 	//console.log('sclicked.x + indc = ' + (sclicked.x + indc))
 	//console.log('sclicked.x = ' + sclicked.x)
 	//console.log('indc = ' + indc)
@@ -153,12 +159,15 @@ function setIndPos(left, offset, center) {
 function waitWithClick(target, delay = 100) {
 	setTimeout(() => {
 		//console.log('after delay clicked before = ' + target.dataset.clicked);
-		syncFilters();
+
 		target.dataset.clicked = -1;
 	}, delay);
 }
 
 function changeRangeInd(e) {
+	if (ind.style.display == "none") {
+		return;
+	}
 	let el = e.target;
 	let mouseX = e.clientX;
 	const id = el.id;
@@ -216,9 +225,10 @@ function changeRangeInd(e) {
 
 	//console.log("mouseX: " + mouseX);
 	//center = mouseX - rect.left - center;
-
+	strip.dataset.info = T_INFOS.filtering;
 	setIndPos(baseleft, offset, center);
 	waitWithClick(el, 100);
+	setTimeout(syncFilters, 250);
 }
 //After document content is loaded
 window.addEventListener("DOMContentLoaded", (event) => {
@@ -270,12 +280,10 @@ function filterColor(colorPrev) {
 		indStart = indEnd - ind.offsetWidth;
 	}
 
-	// console.log("indStart: " + indStart + " / ind a,b: " + [indStart, indEnd]);
+	//console.log("indStart: " + indStart + " / ind a,b: " + [indStart, indEnd]);
 	//let min = hsl[0] + indStart;
 	//let max = indEnd - hsl[0];
 	//console.log(rgb);
-
-	//console.log('a,b = '+[a,b])
 
 	if (hsl[0] >= indStart && hsl[0] < indEnd && hsl[2] > 28 && hsl[2] < 76 && hsl[1] > 24) {
 		// console.log(
