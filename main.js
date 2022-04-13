@@ -1,4 +1,4 @@
-import { filter, throttle, debounce, showHide, RGBToHSL } from './utils';
+import { filter, throttle, debounce, showHide, RGBToHSL } from "./utils";
 /* 
 wersja: 2022-04-08
 WYMAGANE BIBLIOTEKI: - jeszcze narazie!
@@ -8,22 +8,22 @@ lib\jquery.min.js (3.4.1)
 */
 
 const T_SELECTORS = {
-	textInput: '#input_filtruj',
-	table: '#tabela_farby',
-	tbody: '#tabela_farby tbody',
-	row: '#tabela_farby tbody tr',
-	nameCol: '#tabela_farby tbody tr:first',
-	checkOld: '#check_hide_old',
-	checkEmpty: '#check_empty',
-	ind: '#indicator',
-	plus: '#plus_range',
-	minus: '#minus_range',
+	textInput: "#input_filtruj",
+	table: "#tabela_farby",
+	tbody: "#tabela_farby tbody",
+	row: "#tabela_farby tbody tr",
+	nameCol: "#tabela_farby tbody tr:first",
+	checkOld: "#check_hide_old",
+	checkEmpty: "#check_empty",
+	ind: "#indicator",
+	plus: "#plus_range",
+	minus: "#minus_range",
 };
 Object.freeze(T_SELECTORS);
 
 function syncFilters() {
 	const inputText = document.querySelector(T_SELECTORS.textInput).value.toLowerCase();
-	const rows = document.querySelector(T_SELECTORS.tbody).getElementsByTagName('tr');
+	const rows = document.querySelector(T_SELECTORS.tbody).getElementsByTagName("tr");
 
 	const oldChecked = document.querySelector(T_SELECTORS.checkOld).checked;
 
@@ -31,64 +31,63 @@ function syncFilters() {
 
 	filter(rows, (el) => {
 		//console.log(el.nodeName);
-		let colorPrev = el.querySelector('.cprev');
+		let colorPrev = el.querySelector(".cprev");
 		let text = el.firstElementChild.innerText.toLowerCase();
-		let filterPatern = '';
-		filterPatern += inputText != '' && text.indexOf(inputText) == -1 ? 0 : 1;
-		filterPatern += el.classList.contains('old') && oldChecked ? 0 : 1;
-		filterPatern += el.classList.contains('empty') && emptyChecked ? 0 : 1;
+		let filterPatern = "";
+		filterPatern += inputText != "" && text.indexOf(inputText) == -1 ? 0 : 1;
+		filterPatern += el.classList.contains("old") && oldChecked ? 0 : 1;
+		filterPatern += el.classList.contains("empty") && emptyChecked ? 0 : 1;
 		filterPatern += filterColor(colorPrev);
-		const isOut = filterPatern.indexOf('0') > -1;
+		const isOut = filterPatern.indexOf("0") > -1;
 
 		//console.log(text + ": " + colorPrev.style.backgroundColor);
 		//console.log(isOut ? "ukrty(e)" : text + ": filterPatern: " + filterPatern);
 		showHide(isOut, el);
 	});
 
-	/* $('#tabela_farby tbody tr').filter(function () {
-		$(this).toggle(
-			$(this).children(':first').text().toLowerCase().indexOf(value) > -1
-		);
-	}); */
+	/* $("#tabela_farby tbody tr").filter(function () {
+		$(this).toggle($(this).children(":first").text().toLowerCase().indexOf(value) > -1);
+	});
 
-	/* if ($("#check_metalic").prop("checked")) {
+	if ($("#check_metalic").prop("checked")) {
 		$("#tabela_farby tbody tr").filter(":not(.metalize)").hide(); //function() {
-	} */
+	}
 
-	/* if (document.querySelector(T_SELECTORS.checkOld).checked) {
+	if (document.querySelector(T_SELECTORS.checkOld).checked) {
 		filter(rows, (el) => {
-			showHide(el.classList.contains('old'), el);
+			showHide(el.classList.contains("old"), el);
 		});
-	} */
+	}
 
-	/* 	if ($('#check_hide_old').prop('checked')) {
-		$('#tabela_farby tbody tr').filter('.old').hide(); //function() {
-	} */
-	/*else if(!$("#check_hide_old").prop("checked")){
-		
-	}*/
+	if ($("#check_hide_old").prop("checked")) {
+		$("#tabela_farby tbody tr").filter(".old").hide(); //function() {
+	} else if (!$("#check_hide_old").prop("checked")) {
+	}
 
-	/* if ($('#check_empty').prop('checked')) {
-		$('#tabela_farby tbody tr').filter('.empty').hide(); //function() {
+	if ($("#check_empty").prop("checked")) {
+		$("#tabela_farby tbody tr").filter(".empty").hide(); //function() {
 	} */
 }
 
-let strip = document.querySelector('#color_strip');
-let ind = document.querySelector('#indicator');
-let plus = document.querySelector('#plus_range');
-let minus = document.querySelector('#minus_range');
+let strip = document.querySelector("#color_strip");
+let ind = document.querySelector("#indicator");
+let plus = document.querySelector("#plus_range");
+let minus = document.querySelector("#minus_range");
 
 function setIndicator(e) {
-	if (e.target.id === 'reset_range') {
-		ind.style.width = '10px';
-		ind.style.display = 'none';
+	if (e.target.id === "reset_range") {
+		ind.style.width = "361px";
+		ind.style.left = "0px";
+		ind.dataset.position = 0;
+		ind.style.display = "none";
 		return;
 	}
 
-	if (ind.style.display === 'none') {
-		ind.style.display = 'block';
-		ind.style.width = '10px';
-		ind.style.left = '180px';
+	if (ind.style.display === "none") {
+		ind.style.display = "block";
+		ind.style.width = "10px";
+		ind.dataset.position = 180;
+		ind.style.left = "180px";
 	}
 
 	moveIndTo(e);
@@ -119,10 +118,12 @@ function moveIndTo(e) {
 			: sclicked.x - indc <= 0
 			? 0
 			: sclicked.x - indc;
-	ind.style.left = pos + 'px';
-	ind.dataset.position = pos;
 
-	syncFilters();
+	ind.dataset.position = pos;
+	ind.style.left = pos + "px";
+
+	waitWithClick(target, 100);
+	//syncFilters();
 	//console.log('sclicked.x + indc = ' + (sclicked.x + indc))
 	//console.log('sclicked.x = ' + sclicked.x)
 	//console.log('indc = ' + indc)
@@ -144,15 +145,15 @@ function setIndPos(left, offset, center) {
 	}
 
 	ind.dataset.position = pos;
-	ind.style.left = pos + 'px';
+	ind.style.left = pos + "px";
 
-	syncFilters();
 	//console.log("[sIP] indicator pos: " + pos);
 }
 
-function waitWithClick(target, delay = 250) {
+function waitWithClick(target, delay = 100) {
 	setTimeout(() => {
 		//console.log('after delay clicked before = ' + target.dataset.clicked);
+		syncFilters();
 		target.dataset.clicked = -1;
 	}, delay);
 }
@@ -209,7 +210,7 @@ function changeRangeInd(e) {
 	let newWidth = basewidth + offset;
 	//console.log(newWidth);
 	if (newWidth >= 10 && newWidth <= 80 && offset != 0) {
-		el.style.width = newWidth + 'px';
+		el.style.width = newWidth + "px";
 		//console.log("el.style.width = " + el.style.width);
 	}
 
@@ -217,42 +218,41 @@ function changeRangeInd(e) {
 	//center = mouseX - rect.left - center;
 
 	setIndPos(baseleft, offset, center);
-
-	waitWithClick(el, 250);
+	waitWithClick(el, 100);
 }
 //After document content is loaded
-window.addEventListener('DOMContentLoaded', (event) => {
+window.addEventListener("DOMContentLoaded", (event) => {
 	// Events
 	// $("#input_filtruj").val("");
 	// $("#check_metalic").prop("checked", false);
 	// $("#check_hide_old").prop("checked", false);
 	// $("#check_empty").prop("checked", false);
 
-	$('#input_filtruj').on('keyup', syncFilters);
-	$('#check_metalic').on('click', syncFilters);
-	$('#check_hide_old').on('click', syncFilters);
-	$('#check_empty').on('click', syncFilters);
+	$("#input_filtruj").on("keyup", syncFilters);
+	$("#check_metalic").on("click", syncFilters);
+	$("#check_hide_old").on("click", syncFilters);
+	$("#check_empty").on("click", syncFilters);
 
-	strip = document.querySelector('#color_strip');
-	ind = document.querySelector('#indicator');
-	plus = document.querySelector('#plus_range');
-	minus = document.querySelector('#minus_range');
-	plus.addEventListener('click', changeRangeInd);
-	minus.addEventListener('click', changeRangeInd);
-	ind.addEventListener('click', changeRangeInd);
-	strip.addEventListener('mousedown', setIndicator);
-	document.querySelector('#reset_range').addEventListener('mouseup', setIndicator);
+	strip = document.querySelector("#color_strip");
+	ind = document.querySelector("#indicator");
+	plus = document.querySelector("#plus_range");
+	minus = document.querySelector("#minus_range");
+	plus.addEventListener("click", changeRangeInd);
+	minus.addEventListener("click", changeRangeInd);
+	ind.addEventListener("click", changeRangeInd);
+	strip.addEventListener("mousedown", setIndicator);
+	document.querySelector("#reset_range").addEventListener("mouseup", setIndicator);
 });
 
 function filterColor(colorPrev) {
 	let rgb = colorPrev.style.backgroundColor;
 
-	if (rgb === '') return 0;
+	if (rgb === "") return 0;
 
-	let filter = '';
-	let calibration = 45;
+	let filter = "";
+	let calibration = 54;
 	let indStart = parseInt(ind.dataset.position) - calibration;
-	let indEnd = parseInt(ind.dataset.position) + ind.offsetWidth - calibration;
+	let indEnd = indStart + ind.offsetWidth;
 	let hsl = RGBToHSL(rgb);
 	//indStart = indStart < 0 ? 360 + indStart : indStart;
 	//indEnd = indEnd < 0 ? 360 + indEnd : indEnd;
@@ -264,25 +264,27 @@ function filterColor(colorPrev) {
 	if (indEnd < 0) {
 		indEnd + 360;
 	}
-
+	// console.log("start,end:" + [indStart, indEnd] + " / indWidth: " + ind.offsetWidth);
 	if (indEnd < indStart) {
-		indEnd += 360;
+		indEnd = indStart + ind.offsetWidth;
+		indStart = indEnd - ind.offsetWidth;
 	}
 
+	// console.log("indStart: " + indStart + " / ind a,b: " + [indStart, indEnd]);
 	//let min = hsl[0] + indStart;
 	//let max = indEnd - hsl[0];
 	//console.log(rgb);
 
 	//console.log('a,b = '+[a,b])
 
-	if (hsl[0] >= indStart && hsl[0] < indEnd && hsl[2] > 20 && hsl[2] < 60 && hsl[1] > 20) {
-		console.log(
-			colorPrev.parentElement.firstElementChild.innerText +
-				'::hsl: ' +
-				hsl +
-				' / indScope: ' +
-				[indStart, indEnd]
-		);
+	if (hsl[0] >= indStart && hsl[0] < indEnd && hsl[2] > 28 && hsl[2] < 76 && hsl[1] > 24) {
+		// console.log(
+		// 	colorPrev.parentElement.firstElementChild.innerText +
+		// 		"::hsl: " +
+		// 		hsl +
+		// 		" / ind a,b: " +
+		// 		[indStart, indEnd]
+		// );
 		filter += 1;
 	} else {
 		filter += 0;
