@@ -63,7 +63,7 @@ td.old {
 }
 
 td.old::after {
-	content: "stara";
+	content: 'stara';
 	color: white;
 	font-size: 2 rem;
 	display: inline-block;
@@ -134,7 +134,7 @@ td.old::after {
 
 .tooltip::after,
 .tooltip::before {
-	content: "";
+	content: '';
 	position: absolute;
 	top: 30%;
 	left: -10px;
@@ -171,7 +171,7 @@ td.old::after {
 }
 
 #metalic_range:hover::after {
-	content: "metalic";
+	content: 'metalic';
 	position: absolute;
 	left: 0;
 	top: 10px;
@@ -337,7 +337,7 @@ legend {
 	height: 46px;
 	left: 100px;
 	top: -3px;
-	border: 2px dashed rgb(255, 255, 255);
+	border: 1px dashed rgb(255, 255, 255);
 	border-top: 4px double gray;
 	border-bottom: 4px double gray;
 	border-radius: 3px;
@@ -351,7 +351,7 @@ legend {
 }
 
 #ranger #indicator::before {
-	content: "";
+	content: '';
 	position: absolute;
 	top: 0px;
 	left: 50%;
