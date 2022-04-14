@@ -28,39 +28,52 @@ const T_SELECTORS = {
 };
 Object.freeze(T_SELECTORS);
 
-function syncFilters() {
-	const inputText = document.querySelector(T_SELECTORS.textInput).value.toLowerCase();
+function syncFilters(e = null) {
+	console.log(e?.target.id);
+
+	const input = document.querySelector(T_SELECTORS.textInput);
 	const rows = document.querySelector(T_SELECTORS.tbody).getElementsByTagName("tr");
-
 	const oldChecked = document.querySelector(T_SELECTORS.checkOld).checked;
-
 	const emptyChecked = document.querySelector(T_SELECTORS.checkEmpty).checked;
+
+	let inputText = input.value.toLowerCase();
+
+	if (e?.target.id !== "input_filtruj") {
+		resetColorFilters("indicator");
+	} else {
+		resetColorFilters("input");
+	}
 
 	filter(rows, (el) => {
 		//console.log(el.nodeName);
 		let colorPrev = el.querySelector(".cprev");
 		let text = el.firstElementChild.innerText.toLowerCase();
 		let filterPatern = "";
-		filterPatern += inputText != "" && text.indexOf(inputText) == -1 ? 0 : 1;
 		filterPatern += el.classList.contains("old") && oldChecked ? 0 : 1;
 		filterPatern += el.classList.contains("empty") && emptyChecked ? 0 : 1;
-		if (ind.style.display != "none" && ind.dataset.filtering === "strip") {
-			filterPatern += el.classList.contains("metalize") ? 0 : 1;
-			filterPatern += filterColor(colorPrev);
-		}
-		if (ind.dataset.filtering === "metalic") {
-			//console.log(el.classList);
-			filterPatern += el.classList.contains("metalize") ? 1 : 0;
-		}
-		if (ind.dataset.filtering === "dark") {
-			//console.log(el.classList);
-			filterPatern += filterDark(colorPrev);
-			filterPatern += el.classList.contains("metalize") ? 0 : 1;
-		}
-		if (ind.dataset.filtering === "grays") {
-			//console.log(el.classList);
-			filterPatern += filterGrays(colorPrev);
-			filterPatern += el.classList.contains("metalize") ? 0 : 1;
+
+		if (ind.dataset.filtering === "") {
+			filterPatern += inputText != "" && text.indexOf(inputText) == -1 ? 0 : 1;
+		} else {
+			input.value = "";
+			if (ind.style.display != "none" && ind.dataset.filtering === "strip") {
+				filterPatern += el.classList.contains("metalize") ? 0 : 1;
+				filterPatern += filterColor(colorPrev);
+			}
+			if (ind.dataset.filtering === "metalic") {
+				//console.log(el.classList);
+				filterPatern += el.classList.contains("metalize") ? 1 : 0;
+			}
+			if (ind.dataset.filtering === "dark") {
+				//console.log(el.classList);
+				filterPatern += filterDark(colorPrev);
+				filterPatern += el.classList.contains("metalize") ? 0 : 1;
+			}
+			if (ind.dataset.filtering === "grays") {
+				//console.log(el.classList);
+				filterPatern += filterGrays(colorPrev);
+				filterPatern += el.classList.contains("metalize") ? 0 : 1;
+			}
 		}
 		const isOut = filterPatern.indexOf("0") > -1;
 
@@ -79,13 +92,25 @@ let metalic = document.querySelector("#metalic_range");
 let dark = document.querySelector("#dark_range");
 let grays = document.querySelector("#grays_range");
 
-function setIndicator(e) {
-	if (e.target.id === "reset_range") {
+function resetColorFilters(indicator = null) {
+	if (indicator === "input" || indicator === "resetor") {
 		ind.style.width = "300px";
 		ind.style.left = "0px";
 		ind.dataset.position = 0;
 		ind.dataset.filtering = "";
 		ind.style.display = "none";
+	}
+
+	if (indicator === "indicator" || indicator === "resetor") {
+		const input = document.querySelector(T_SELECTORS.textInput);
+		input.value = "";
+	}
+	return;
+}
+
+function setIndicator(e) {
+	if (e.target.id === "reset_range") {
+		resetColorFilters("resetor");
 		setTimeout(syncFilters, 150);
 		return;
 	}
@@ -238,38 +263,6 @@ function changeRangeInd(e) {
 	waitWithClick(el, 100);
 	setTimeout(syncFilters, 250);
 }
-//After document content is loaded
-window.addEventListener("DOMContentLoaded", (event) => {
-	// Events
-	// $("#input_filtruj").val("");
-	// $("#check_metalic").prop("checked", false);
-	// $("#check_hide_old").prop("checked", false);
-	// $("#check_empty").prop("checked", false);
-
-	$("#input_filtruj").on("keyup", syncFilters);
-	$("#check_metalic").on("click", syncFilters);
-	$("#check_hide_old").on("click", syncFilters);
-	$("#check_empty").on("click", syncFilters);
-
-	strip = document.querySelector("#color_strip");
-	metalic = document.querySelector(T_SELECTORS.metalic);
-	dark = document.querySelector(T_SELECTORS.dark);
-	grays = document.querySelector(T_SELECTORS.grays);
-	ind = document.querySelector("#indicator");
-	plus = document.querySelector("#plus_range");
-	minus = document.querySelector("#minus_range");
-
-	ind.style.display = "none";
-	plus.addEventListener("click", changeRangeInd);
-	minus.addEventListener("click", changeRangeInd);
-	ind.addEventListener("click", changeRangeInd);
-	strip.addEventListener("mousedown", setIndicator);
-	metalic.addEventListener("click", showOnlyMetalic);
-	dark.addEventListener("click", showOnlyDark);
-	grays.addEventListener("click", showOnlyGrays);
-
-	document.querySelector("#reset_range").addEventListener("mouseup", setIndicator);
-});
 
 function showOnlyMetalic() {
 	ind.style.display = "block";
@@ -389,3 +382,36 @@ function filterColor(colorPrev) {
 
 	return 0;
 }
+
+//After document content is loaded
+window.addEventListener("DOMContentLoaded", (event) => {
+	// Events
+	// $("#input_filtruj").val("");
+	// $("#check_metalic").prop("checked", false);
+	// $("#check_hide_old").prop("checked", false);
+	// $("#check_empty").prop("checked", false);
+
+	$("#input_filtruj").on("keyup", syncFilters);
+	$("#check_metalic").on("click", syncFilters);
+	$("#check_hide_old").on("click", syncFilters);
+	$("#check_empty").on("click", syncFilters);
+
+	strip = document.querySelector("#color_strip");
+	metalic = document.querySelector(T_SELECTORS.metalic);
+	dark = document.querySelector(T_SELECTORS.dark);
+	grays = document.querySelector(T_SELECTORS.grays);
+	ind = document.querySelector("#indicator");
+	plus = document.querySelector("#plus_range");
+	minus = document.querySelector("#minus_range");
+
+	ind.style.display = "none";
+	plus.addEventListener("click", changeRangeInd);
+	minus.addEventListener("click", changeRangeInd);
+	ind.addEventListener("click", changeRangeInd);
+	strip.addEventListener("mousedown", setIndicator);
+	metalic.addEventListener("click", showOnlyMetalic);
+	dark.addEventListener("click", showOnlyDark);
+	grays.addEventListener("click", showOnlyGrays);
+
+	document.querySelector("#reset_range").addEventListener("mouseup", setIndicator);
+});
