@@ -67,9 +67,11 @@
 							<div class="tooltip">
 								<u>Kliknięcie w pole przestrzeni barw</u> <br>
 								ustawia wskaźnik na wskazanym zakresie<br>
-								<u>Kliknięcie we wskaźnik z [<b> ctrl </b>]</u> lub <u>przycisk [<b>+</b>]</u> <br>
+								<u>Kliknięcie we wskaźnik (tylko na pasie barw) <br> z [<b> ctrl </b>]</u> lub
+								<u>klikniecie w przycisk
+									[<b>+</b>]</u> <br>
 								rozszerza zakres o 1 poziom<br>
-								<u>Kliknięcie we wskaźnik z [<b> alt </b>]</u> lub <u>przycisk [<b>-</b>]</u> <br>
+								<u>z [<b> alt </b>]</u> lub <u>kliknięcie w przycisk [<b>-</b>]</u> <br>
 								zmniejsza zakres o 1 poziom <br>
 								<u>Kliknięcie przycisku <b>reset</b> </u> <br>
 								Usuwa wskaźnik zakresu <br> (zakres obejmuje całą przestrzeń barw)
