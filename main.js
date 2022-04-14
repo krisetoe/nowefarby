@@ -21,6 +21,7 @@ const T_SELECTORS = {
 	strip: "#color_strip",
 	metalic: "#metalic_range",
 	dark: "#dark_range",
+	grays: "#grays_range",
 	ind: "#indicator",
 	plus: "#plus_range",
 	minus: "#minus_range",
@@ -56,6 +57,11 @@ function syncFilters() {
 			filterPatern += filterDark(colorPrev);
 			filterPatern += el.classList.contains("metalize") ? 0 : 1;
 		}
+		if (ind.dataset.filtering === "grays") {
+			//console.log(el.classList);
+			filterPatern += filterGrays(colorPrev);
+			filterPatern += el.classList.contains("metalize") ? 0 : 1;
+		}
 		const isOut = filterPatern.indexOf("0") > -1;
 
 		//console.log(text + ": " + colorPrev.style.backgroundColor);
@@ -63,28 +69,6 @@ function syncFilters() {
 		showHide(isOut, el);
 	});
 	strip.dataset.info = "";
-	/* $("#tabela_farby tbody tr").filter(function () {
-		$(this).toggle($(this).children(":first").text().toLowerCase().indexOf(value) > -1);
-	});
-
-	if ($("#check_metalic").prop("checked")) {
-		$("#tabela_farby tbody tr").filter(":not(.metalize)").hide(); //function() {
-	}
-
-	if (document.querySelector(T_SELECTORS.checkOld).checked) {
-		filter(rows, (el) => {
-			showHide(el.classList.contains("old"), el);
-		});
-	}
-
-	if ($("#check_hide_old").prop("checked")) {
-		$("#tabela_farby tbody tr").filter(".old").hide(); //function() {
-	} else if (!$("#check_hide_old").prop("checked")) {
-	}
-
-	if ($("#check_empty").prop("checked")) {
-		$("#tabela_farby tbody tr").filter(".empty").hide(); //function() {
-	} */
 }
 
 let strip = document.querySelector("#color_strip");
@@ -93,6 +77,7 @@ let plus = document.querySelector("#plus_range");
 let minus = document.querySelector("#minus_range");
 let metalic = document.querySelector("#metalic_range");
 let dark = document.querySelector("#dark_range");
+let grays = document.querySelector("#grays_range");
 
 function setIndicator(e) {
 	if (e.target.id === "reset_range") {
@@ -269,6 +254,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
 	strip = document.querySelector("#color_strip");
 	metalic = document.querySelector(T_SELECTORS.metalic);
 	dark = document.querySelector(T_SELECTORS.dark);
+	grays = document.querySelector(T_SELECTORS.grays);
 	ind = document.querySelector("#indicator");
 	plus = document.querySelector("#plus_range");
 	minus = document.querySelector("#minus_range");
@@ -280,6 +266,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
 	strip.addEventListener("mousedown", setIndicator);
 	metalic.addEventListener("click", showOnlyMetalic);
 	dark.addEventListener("click", showOnlyDark);
+	grays.addEventListener("click", showOnlyGrays);
 
 	document.querySelector("#reset_range").addEventListener("mouseup", setIndicator);
 });
@@ -299,6 +286,13 @@ function showOnlyDark() {
 	ind.dataset.filtering = "dark";
 	setTimeout(syncFilters, 150);
 }
+function showOnlyGrays() {
+	ind.style.display = "block";
+	ind.style.width = "40px";
+	ind.style.left = grays.offsetLeft + "px";
+	ind.dataset.filtering = "grays";
+	setTimeout(syncFilters, 150);
+}
 
 function filterDark(colorPrev) {
 	let rgb = colorPrev.style.backgroundColor;
@@ -310,6 +304,22 @@ function filterDark(colorPrev) {
 	let [h, s, l] = RGBToHSL(rgb);
 
 	if (l < 14) {
+		console.log(colorPrev.parentNode.firstElementChild.innerText);
+		return 1;
+	}
+
+	return 0;
+}
+function filterGrays(colorPrev) {
+	let rgb = colorPrev.style.backgroundColor;
+
+	if (rgb === "") {
+		return 0;
+	}
+
+	let [h, s, l] = RGBToHSL(rgb);
+
+	if (s <= 10 && l > 14) {
 		console.log(colorPrev.parentNode.firstElementChild.innerText);
 		return 1;
 	}

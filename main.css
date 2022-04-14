@@ -190,12 +190,18 @@ legend {
 	height: min-content;
 }
 
-#ranger #metalic_range {
+#ranger #metalic_range,
+#dark_range,
+#grays_range {
 	height: 40px;
 	width: 40px;
 	border: 2px solid gray;
 	border-radius: 2px;
 	display: inline-block;
+	margin: 0 4px 0 12px;
+	position: relative;
+}
+#ranger #metalic_range {
 	background: rgb(207, 191, 114);
 	background: linear-gradient(
 		118deg,
@@ -205,23 +211,23 @@ legend {
 		rgba(136, 134, 106, 1) 69%,
 		rgba(199, 199, 199, 1) 100%
 	);
-	margin: 0 15px;
-
-	position: relative;
 }
 #ranger #dark_range {
-	height: 40px;
-	width: 40px;
-	border: 2px solid gray;
-	border-radius: 2px;
-	display: inline-block;
 	background: rgb(10, 10, 14);
-	margin: 0 15px 0 0;
-
-	position: relative;
 }
-#dark_range:hover::before {
-	content: "czarne";
+#ranger #grays_range {
+	background: rgb(104, 104, 103);
+	background: linear-gradient(
+		15deg,
+		rgb(155, 154, 154) 0%,
+		rgb(114, 112, 114) 45%,
+		rgb(102, 107, 109) 75%,
+		rgb(61, 61, 61) 100%
+	);
+}
+#dark_range:hover::before,
+#metalic_range:hover::before,
+#grays_range:hover::before {
 	position: absolute;
 	left: 0px;
 	top: 0px;
@@ -234,18 +240,14 @@ legend {
 	font-size: 10px;
 	color: rgb(255, 255, 255);
 }
+#dark_range:hover::before {
+	content: "czarne";
+}
+#grays_range:hover::before {
+	content: "szarości";
+}
 #metalic_range:hover::before {
 	content: "metalic";
-	position: absolute;
-	left: 0px;
-	top: 0px;
-	width: 36px;
-	height: 44px;
-	padding-top: 10px;
-	padding-left: 0px;
-	padding-right: 0px;
-	font-size: 10px;
-	color: rgb(255, 255, 255);
 }
 
 #ranger-buttons {

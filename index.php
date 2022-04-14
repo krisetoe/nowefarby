@@ -84,6 +84,7 @@
 						<div id="color_strip" data-info=''></div>
 						<div id="metalic_range"></div>
 						<div id="dark_range"></div>
+						<div id="grays_range"></div>
 						<div id="ranger-buttons">
 							<div><button id="reset_range" type="button">resetuj</button></div>
 							<div>
