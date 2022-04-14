@@ -74,7 +74,7 @@
 								<u>z [<b> alt </b>]</u> lub <u>kliknięcie w przycisk [<b>-</b>]</u> <br>
 								zmniejsza zakres o 1 poziom <br>
 								<u>Kliknięcie przycisku <b>reset</b> </u> <br>
-								Usuwa wskaźnik zakresu <br> (zakres obejmuje całą przestrzeń barw)
+								Usuwa filtrowanie (również po nazwie).
 
 							</div>
 						</span>
