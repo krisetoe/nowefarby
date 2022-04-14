@@ -63,7 +63,7 @@
 			</div>
 			<div id="color_range" class="">
 				<fieldset class="field2">
-					<legend>pokaż tylko odcienie:<span class="questionmark">?
+					<legend>pokaż tylko barwy:<span class="questionmark">?
 							<div class="tooltip">
 								<u>Kliknięcie w pole przestrzeni barw</u> <br>
 								ustawia wskaźnik na wskazanym zakresie<br>
@@ -78,9 +78,11 @@
 						</span>
 					</legend>
 					<div id="ranger">
-						<div id="indicator" data-clicked=-1 data-position=0></div>
+						<div id="indicator" data-clicked=-1 data-position=0 data-filtering=''></div>
 						<div id="color_strip" data-info=''></div>
-						<div id="strip-buttons">
+						<div id="metalic_range"></div>
+						<div id="dark_range"></div>
+						<div id="ranger-buttons">
 							<div><button id="reset_range" type="button">resetuj</button></div>
 							<div>
 								<button id="plus_range" type="button" data-mod=1>+</button>

@@ -63,7 +63,7 @@ td.old {
 }
 
 td.old::after {
-	content: 'stara';
+	content: "stara";
 	color: white;
 	font-size: 2 rem;
 	display: inline-block;
@@ -134,7 +134,7 @@ td.old::after {
 
 .tooltip::after,
 .tooltip::before {
-	content: '';
+	content: "";
 	position: absolute;
 	top: 30%;
 	left: -10px;
@@ -154,31 +154,6 @@ td.old::after {
 .questionmark:hover .tooltip {
 	visibility: visible;
 	opacity: 1;
-}
-
-#metalic_range {
-	background: rgb(207, 191, 114);
-	background: linear-gradient(
-		118deg,
-		rgba(207, 191, 114, 1) 0%,
-		rgba(121, 115, 9, 1) 24%,
-		rgba(193, 188, 116, 1) 49%,
-		rgba(136, 134, 106, 1) 69%,
-		rgba(199, 199, 199, 1) 100%
-	);
-	margin-left: 10px;
-	position: relative;
-}
-
-#metalic_range:hover::after {
-	content: 'metalic';
-	position: absolute;
-	left: 0;
-	top: 10px;
-	width: 75px;
-	height: 25px;
-	font-size: 15px;
-	color: black;
 }
 
 fieldset {
@@ -214,7 +189,66 @@ legend {
 	justify-content: center;
 	height: min-content;
 }
-#strip-buttons {
+
+#ranger #metalic_range {
+	height: 40px;
+	width: 40px;
+	border: 2px solid gray;
+	border-radius: 2px;
+	display: inline-block;
+	background: rgb(207, 191, 114);
+	background: linear-gradient(
+		118deg,
+		rgba(207, 191, 114, 1) 0%,
+		rgba(121, 115, 9, 1) 24%,
+		rgba(193, 188, 116, 1) 49%,
+		rgba(136, 134, 106, 1) 69%,
+		rgba(199, 199, 199, 1) 100%
+	);
+	margin: 0 15px;
+
+	position: relative;
+}
+#ranger #dark_range {
+	height: 40px;
+	width: 40px;
+	border: 2px solid gray;
+	border-radius: 2px;
+	display: inline-block;
+	background: rgb(10, 10, 14);
+	margin: 0 15px 0 0;
+
+	position: relative;
+}
+#dark_range:hover::before {
+	content: "czarne";
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	width: 36px;
+	height: 44px;
+	padding-top: 10px;
+	padding-left: 0px;
+	padding-right: 0px;
+	text-align: center;
+	font-size: 10px;
+	color: rgb(255, 255, 255);
+}
+#metalic_range:hover::before {
+	content: "metalic";
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	width: 36px;
+	height: 44px;
+	padding-top: 10px;
+	padding-left: 0px;
+	padding-right: 0px;
+	font-size: 10px;
+	color: rgb(255, 255, 255);
+}
+
+#ranger-buttons {
 	display: flex;
 	align-self: flex-end;
 	flex-direction: column;
@@ -223,15 +257,15 @@ legend {
 	margin-left: 10px;
 	width: fit-content;
 }
-#strip-buttons div {
+#ranger-buttons div {
 	display: flex;
 	gap: 10px;
 	align-self: center;
 }
-#strip-buttons button {
+#ranger-buttons button {
 	box-shadow: 2px 2px 2px rgba(190, 190, 190, 0.45);
 }
-#strip-buttons button:active {
+#ranger-buttons button:active {
 	box-shadow: inset 0 0 5px #555;
 	background-color: white;
 }
@@ -280,6 +314,7 @@ legend {
 	border-color: gray;
 	border-style: solid;
 	border-width: 2px;
+	border-radius: 2px;
 	background: linear-gradient(
 			to top,
 			rgba(0, 0, 0, 0.65) 0%,
@@ -351,7 +386,7 @@ legend {
 }
 
 #ranger #indicator::before {
-	content: '';
+	content: "";
 	position: absolute;
 	top: 0px;
 	left: 50%;

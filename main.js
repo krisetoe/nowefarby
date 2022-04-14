@@ -1,4 +1,4 @@
-import { filter, throttle, debounce, showHide, RGBToHSL } from './utils';
+import { filter, throttle, debounce, showHide, RGBToHSL } from "./utils";
 /* 
 wersja: 2022-04-08
 WYMAGANE BIBLIOTEKI: - jeszcze narazie!
@@ -7,26 +7,29 @@ lib\ac-colors.min.js
 lib\jquery.min.js (3.4.1)
 */
 const T_INFOS = {
-	filtering: '- filtrowanie -',
+	filtering: "- filtrowanie -",
 };
 
 const T_SELECTORS = {
-	textInput: '#input_filtruj',
-	table: '#tabela_farby',
-	tbody: '#tabela_farby tbody',
-	row: '#tabela_farby tbody tr',
-	nameCol: '#tabela_farby tbody tr:first',
-	checkOld: '#check_hide_old',
-	checkEmpty: '#check_empty',
-	ind: '#indicator',
-	plus: '#plus_range',
-	minus: '#minus_range',
+	textInput: "#input_filtruj",
+	table: "#tabela_farby",
+	tbody: "#tabela_farby tbody",
+	row: "#tabela_farby tbody tr",
+	nameCol: "#tabela_farby tbody tr:first",
+	checkOld: "#check_hide_old",
+	checkEmpty: "#check_empty",
+	strip: "#color_strip",
+	metalic: "#metalic_range",
+	dark: "#dark_range",
+	ind: "#indicator",
+	plus: "#plus_range",
+	minus: "#minus_range",
 };
 Object.freeze(T_SELECTORS);
 
 function syncFilters() {
 	const inputText = document.querySelector(T_SELECTORS.textInput).value.toLowerCase();
-	const rows = document.querySelector(T_SELECTORS.tbody).getElementsByTagName('tr');
+	const rows = document.querySelector(T_SELECTORS.tbody).getElementsByTagName("tr");
 
 	const oldChecked = document.querySelector(T_SELECTORS.checkOld).checked;
 
@@ -34,22 +37,32 @@ function syncFilters() {
 
 	filter(rows, (el) => {
 		//console.log(el.nodeName);
-		let colorPrev = el.querySelector('.cprev');
+		let colorPrev = el.querySelector(".cprev");
 		let text = el.firstElementChild.innerText.toLowerCase();
-		let filterPatern = '';
-		filterPatern += inputText != '' && text.indexOf(inputText) == -1 ? 0 : 1;
-		filterPatern += el.classList.contains('old') && oldChecked ? 0 : 1;
-		filterPatern += el.classList.contains('empty') && emptyChecked ? 0 : 1;
-		if (ind.style.display != 'none') {
+		let filterPatern = "";
+		filterPatern += inputText != "" && text.indexOf(inputText) == -1 ? 0 : 1;
+		filterPatern += el.classList.contains("old") && oldChecked ? 0 : 1;
+		filterPatern += el.classList.contains("empty") && emptyChecked ? 0 : 1;
+		if (ind.style.display != "none" && ind.dataset.filtering === "strip") {
+			filterPatern += el.classList.contains("metalize") ? 0 : 1;
 			filterPatern += filterColor(colorPrev);
 		}
-		const isOut = filterPatern.indexOf('0') > -1;
+		if (ind.dataset.filtering === "metalic") {
+			//console.log(el.classList);
+			filterPatern += el.classList.contains("metalize") ? 1 : 0;
+		}
+		if (ind.dataset.filtering === "dark") {
+			//console.log(el.classList);
+			filterPatern += filterDark(colorPrev);
+			filterPatern += el.classList.contains("metalize") ? 0 : 1;
+		}
+		const isOut = filterPatern.indexOf("0") > -1;
 
 		//console.log(text + ": " + colorPrev.style.backgroundColor);
 		//console.log(isOut ? "ukrty(e)" : text + ": filterPatern: " + filterPatern);
 		showHide(isOut, el);
 	});
-	strip.dataset.info = '';
+	strip.dataset.info = "";
 	/* $("#tabela_farby tbody tr").filter(function () {
 		$(this).toggle($(this).children(":first").text().toLowerCase().indexOf(value) > -1);
 	});
@@ -74,39 +87,46 @@ function syncFilters() {
 	} */
 }
 
-let strip = document.querySelector('#color_strip');
-let ind = document.querySelector('#indicator');
-let plus = document.querySelector('#plus_range');
-let minus = document.querySelector('#minus_range');
+let strip = document.querySelector("#color_strip");
+let ind = document.querySelector("#indicator");
+let plus = document.querySelector("#plus_range");
+let minus = document.querySelector("#minus_range");
+let metalic = document.querySelector("#metalic_range");
+let dark = document.querySelector("#dark_range");
 
 function setIndicator(e) {
-	if (e.target.id === 'reset_range') {
-		ind.style.width = '300px';
-		ind.style.left = '0px';
+	if (e.target.id === "reset_range") {
+		ind.style.width = "300px";
+		ind.style.left = "0px";
 		ind.dataset.position = 0;
-		ind.style.display = 'none';
+		ind.dataset.filtering = "";
+		ind.style.display = "none";
 		setTimeout(syncFilters, 150);
 		return;
 	}
 
-	if (ind.style.display === 'none') {
-		ind.style.display = 'block';
-		ind.style.width = '10px';
-		ind.dataset.position = 180;
-		ind.style.left = '180px';
+	if (ind.dataset.filtering !== "strip") {
+		ind.style.display = "block";
+		ind.style.width = "10px";
+		ind.dataset.position = 349;
+		ind.style.left = "349px";
+		//ind.style.left = "0px";
 	}
 
-	moveIndTo(e);
+	setTimeout(moveIndTo, 250, e);
 }
 
 function moveIndTo(e) {
 	// Get the target
 	const target = e.target;
+
+	ind.dataset.filtering = "strip";
 	//const ind = document.querySelector('#indicator')
 
 	// Get the bounding rectangle of target
 	const rect = target.getBoundingClientRect();
-
+	const met = document.querySelector(T_SELECTORS.metalic).getBoundingClientRect();
+	let left = rect.left;
 	// Mouse clicked position at strip
 	const sclicked = {
 		x: e.clientX - rect.left,
@@ -115,7 +135,6 @@ function moveIndTo(e) {
 	//indicator
 	//const ind = strip.children[0];
 	const indc = ind.offsetWidth / 2; //indicator center
-	const indl = ind.offsetLeft;
 
 	//setIndPos(indl, sclicked.x + indl - indc)
 	const pos =
@@ -126,14 +145,18 @@ function moveIndTo(e) {
 			: sclicked.x - indc;
 
 	ind.dataset.position = pos;
-	ind.style.left = pos + 'px';
+	ind.style.left = pos + "px";
 
 	strip.dataset.info = T_INFOS.filtering;
 	setTimeout(syncFilters, 250);
-	//console.log('sclicked.x + indc = ' + (sclicked.x + indc))
-	//console.log('sclicked.x = ' + sclicked.x)
-	//console.log('indc = ' + indc)
-	//console.log("[mIT] indicator pos: " + pos);
+
+	console.log("kliknięto: " + target.id + " /x : " + sclicked.x);
+	console.log("strip: left: " + left);
+	console.log("metalic: left:" + met.left);
+	//console.log("sclicked.x + indc = " + (sclicked.x + indc));
+	//console.log("sclicked.x = " + sclicked.x);
+	console.log("indc = " + indc);
+	console.log("[mIT] indicator pos: " + pos);
 }
 
 function setIndPos(left, offset, center) {
@@ -151,7 +174,7 @@ function setIndPos(left, offset, center) {
 	}
 
 	ind.dataset.position = pos;
-	ind.style.left = pos + 'px';
+	ind.style.left = pos + "px";
 
 	//console.log("[sIP] indicator pos: " + pos);
 }
@@ -165,7 +188,7 @@ function waitWithClick(target, delay = 100) {
 }
 
 function changeRangeInd(e) {
-	if (ind.style.display == 'none') {
+	if (ind.style.display == "none" || ind.dataset.filtering !== "strip") {
 		return;
 	}
 	let el = e.target;
@@ -219,7 +242,7 @@ function changeRangeInd(e) {
 	let newWidth = basewidth + offset;
 	//console.log(newWidth);
 	if (newWidth >= 10 && newWidth <= 80 && offset != 0) {
-		el.style.width = newWidth + 'px';
+		el.style.width = newWidth + "px";
 		//console.log("el.style.width = " + el.style.width);
 	}
 
@@ -231,35 +254,75 @@ function changeRangeInd(e) {
 	setTimeout(syncFilters, 250);
 }
 //After document content is loaded
-window.addEventListener('DOMContentLoaded', (event) => {
+window.addEventListener("DOMContentLoaded", (event) => {
 	// Events
 	// $("#input_filtruj").val("");
 	// $("#check_metalic").prop("checked", false);
 	// $("#check_hide_old").prop("checked", false);
 	// $("#check_empty").prop("checked", false);
 
-	$('#input_filtruj').on('keyup', syncFilters);
-	$('#check_metalic').on('click', syncFilters);
-	$('#check_hide_old').on('click', syncFilters);
-	$('#check_empty').on('click', syncFilters);
+	$("#input_filtruj").on("keyup", syncFilters);
+	$("#check_metalic").on("click", syncFilters);
+	$("#check_hide_old").on("click", syncFilters);
+	$("#check_empty").on("click", syncFilters);
 
-	strip = document.querySelector('#color_strip');
-	ind = document.querySelector('#indicator');
-	plus = document.querySelector('#plus_range');
-	minus = document.querySelector('#minus_range');
+	strip = document.querySelector("#color_strip");
+	metalic = document.querySelector(T_SELECTORS.metalic);
+	dark = document.querySelector(T_SELECTORS.dark);
+	ind = document.querySelector("#indicator");
+	plus = document.querySelector("#plus_range");
+	minus = document.querySelector("#minus_range");
 
-	ind.style.display = 'none';
-	plus.addEventListener('click', changeRangeInd);
-	minus.addEventListener('click', changeRangeInd);
-	ind.addEventListener('click', changeRangeInd);
-	strip.addEventListener('mousedown', setIndicator);
-	document.querySelector('#reset_range').addEventListener('mouseup', setIndicator);
+	ind.style.display = "none";
+	plus.addEventListener("click", changeRangeInd);
+	minus.addEventListener("click", changeRangeInd);
+	ind.addEventListener("click", changeRangeInd);
+	strip.addEventListener("mousedown", setIndicator);
+	metalic.addEventListener("click", showOnlyMetalic);
+	dark.addEventListener("click", showOnlyDark);
+
+	document.querySelector("#reset_range").addEventListener("mouseup", setIndicator);
 });
+
+function showOnlyMetalic() {
+	ind.style.display = "block";
+	ind.style.width = "40px";
+	ind.style.left = metalic.offsetLeft + "px";
+	ind.dataset.filtering = "metalic";
+	setTimeout(syncFilters, 150);
+}
+
+function showOnlyDark() {
+	ind.style.display = "block";
+	ind.style.width = "40px";
+	ind.style.left = dark.offsetLeft + "px";
+	ind.dataset.filtering = "dark";
+	setTimeout(syncFilters, 150);
+}
+
+function filterDark(colorPrev) {
+	let rgb = colorPrev.style.backgroundColor;
+
+	if (rgb === "") {
+		return 0;
+	}
+
+	let [h, s, l] = RGBToHSL(rgb);
+
+	if (l < 14) {
+		console.log(colorPrev.parentNode.firstElementChild.innerText);
+		return 1;
+	}
+
+	return 0;
+}
 
 function filterColor(colorPrev) {
 	let rgb = colorPrev.style.backgroundColor;
 
-	if (rgb === '') return 0;
+	if (rgb === "") {
+		return 0;
+	}
 
 	let startOffset = 0;
 	let endOffset = 0;
@@ -298,18 +361,18 @@ function filterColor(colorPrev) {
 	}
 
 	if (h >= indStart - startOffset && h <= indEnd + endOffset && l > 13 && l < 82 && s > 13) {
-		console.log(
-			'ind a,b: ' +
+		/* console.log(
+			"ind a,b: " +
 				[indStart, indEnd] +
-				'/ farba: ' +
+				"/ farba: " +
 				colorPrev.parentNode.firstElementChild.innerText +
-				' / HSL: ' +
+				" / HSL: " +
 				h +
-				', ' +
+				", " +
 				l +
-				' , ' +
+				" , " +
 				l
-		);
+		); */
 
 		return 1;
 	}
