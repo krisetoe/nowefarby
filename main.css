@@ -64,7 +64,7 @@ tr.empty td.cprev {
 }
 
 td.old::after {
-	content: 'stara';
+	content: "stara";
 	color: white;
 	font-size: 2 rem;
 	display: inline-block;
@@ -78,7 +78,7 @@ td.old::after {
 }
 
 tr.empty td.cprev::before {
-	content: 'brak!';
+	content: "brak!";
 	color: white;
 	font-size: 2 rem;
 	display: inline-block;
@@ -137,7 +137,7 @@ tr.empty td.cprev::before {
 	height: fit-content;
 	position: absolute;
 	left: 20px;
-	top: 5px;
+	top: -15px;
 	padding: 10px;
 	text-align: justify;
 	vertical-align: middle;
@@ -149,9 +149,9 @@ tr.empty td.cprev::before {
 
 .tooltip::after,
 .tooltip::before {
-	content: '';
+	content: "";
 	position: absolute;
-	top: 30%;
+	top: 10px;
 	left: -10px;
 	margin-left: -10px;
 	border-width: 10px;
@@ -257,13 +257,13 @@ legend {
 	color: rgb(255, 255, 255);
 }
 #dark_range:hover::before {
-	content: 'czarne';
+	content: "czarne";
 }
 #grays_range:hover::before {
-	content: 'szarości';
+	content: "szarości";
 }
 #metalic_range:hover::before {
-	content: 'metalic';
+	content: "metalic";
 }
 
 #ranger-buttons {
@@ -404,7 +404,7 @@ legend {
 }
 
 #ranger #indicator::before {
-	content: '';
+	content: "";
 	position: absolute;
 	top: 0px;
 	left: 50%;
