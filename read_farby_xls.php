@@ -41,7 +41,7 @@ class FarbyXls
 {
 	public $path='../../Zasoby/farby/FARBY.xls';
 	//public $path='./FARBY.xls'; //sciezka do pliku FARBY.xls domyslnie bedzie = '../../Graficy/Farby/FARBY.xls';
-	public $pantone_path="lib/pantone_rgb.list"; //sciezka do pliku z lista kolorow Pantone w formacie nazwa C\tR\tG\tB 
+	public $pantone_path="lib/pantone_rgb_2022.list"; //sciezka do pliku z lista kolorow Pantone w formacie nazwa C\tR\tG\tB 
 	public $id = 'tabela_farby';
 	private $sheet_index=1; //przechowuje numer arkusza zawierajacego spis farb
 	private $readed_cols=array(1,2,4,5); //tablica kolumn od pierwszej, ktora ma byc uwzgledniona przy formatowaniu
@@ -89,7 +89,7 @@ class FarbyXls
 		
 		$this->Ttrash_val = array('RAZEM:','nr farby','UV  RELEASE COATING ','Super Clean','Silicone','Do zrobiebia z UFO2-0724-408N','Inicjator UV','Klej Laminacja','Klej Złocenie','Lak. Beczka','Lak. SATIN','Lakier HR','Lakier MATT','Lakier TTR','Odpieniacz HK','Odpieniacz UV','Opóźnicz HK','Proszek do Matowienia','FOILBOND 002','UV RELEASE COATING ','RED POWDER PET','FARBY HK','Biała INK','Biała IVORY','BIO BEIGE','BACKING BLACK',' AMBIENT RED','ALDI RICH GOLD','AQUA BREEZE BLUE','GOLD 06','061 TRANSP WHITE');
 		
-		$this->Tspec_color_names = array('033  orange 021'=>'242,104,0',' ambient red'=>'255,0,0','backing black'=>'0,0,0','blue drag cream'=>'254,250,233','dense black'=>'0,0,0','carbon black'=>'0,0,0');
+		$this->Tspec_color_names = array('033  orange 021'=>'242,104,0',' ambient red'=>'255,0,0','backing black'=>'0,0,0','blue drag cream'=>'254,250,233','dense black'=>'0,0,0','carbon black'=>'0,0,0','hs reflex blue'=>'0,10,120','green'=>'0,155,116','bright green  c*'=>'0,176,139');
 		
 		$this->pantoneReference();
 
