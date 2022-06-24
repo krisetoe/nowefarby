@@ -25,6 +25,7 @@ const T_SELECTORS = {
 	ind: "#indicator",
 	plus: "#plus_range",
 	minus: "#minus_range",
+	reset: "#reset_range",
 };
 Object.freeze(T_SELECTORS);
 
@@ -68,6 +69,7 @@ function syncFilters(e = null) {
 				filterPatern += filterGrays(colorPrev);
 				filterPatern += el.classList.contains("metalize") ? 0 : 1;
 			}
+			toggleButtons(false);
 		}
 		const isOut = filterPatern.indexOf("0") > -1;
 
@@ -80,9 +82,10 @@ let strip = document.querySelector("#color_strip");
 let ind = document.querySelector("#indicator");
 let plus = document.querySelector("#plus_range");
 let minus = document.querySelector("#minus_range");
-let metalic = document.querySelector("#metalic_range");
 let dark = document.querySelector("#dark_range");
+let metalic = document.querySelector("#metalic_range");
 let grays = document.querySelector("#grays_range");
+let reset = document.querySelector(T_SELECTORS.reset);
 
 function resetColorFilters(indicator = null) {
 	if (indicator === "input" || indicator === "resetor") {
@@ -91,12 +94,15 @@ function resetColorFilters(indicator = null) {
 		ind.dataset.position = 0;
 		ind.dataset.filtering = "";
 		ind.style.display = "none";
+
+		toggleButtons(true);
 	}
 
 	if (indicator === "indicator" || indicator === "resetor") {
 		const input = document.querySelector(T_SELECTORS.textInput);
 		input.value = "";
 	}
+
 	return;
 }
 
@@ -115,6 +121,19 @@ function setIndicator(e) {
 	}
 
 	setTimeout(moveIndTo, 250, e);
+}
+
+function toggleButtons(state = false) {
+	if (typeof state !== "boolean") {
+		return;
+	}
+	const displayStat = state ? "hidden" : "visible";
+	plus.disabled = state;
+	minus.disabled = state;
+	reset.disabled = state;
+	minus.style.visibility = displayStat;
+	plus.style.visibility = displayStat;
+	reset.style.visibility = displayStat;
 }
 
 function moveIndTo(e) {
@@ -348,4 +367,6 @@ window.addEventListener("DOMContentLoaded", (event) => {
 	grays.addEventListener("click", showOnlyGrays);
 
 	document.querySelector("#reset_range").addEventListener("mouseup", setIndicator);
+
+	toggleButtons(true);
 });
