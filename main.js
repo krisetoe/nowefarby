@@ -69,12 +69,12 @@ function syncFilters(e = null) {
 				filterPatern += filterGrays(colorPrev);
 				filterPatern += el.classList.contains("metalize") ? 0 : 1;
 			}
-			toggleButtons(false);
 		}
 		const isOut = filterPatern.indexOf("0") > -1;
 
 		showHide(isOut, el);
 	});
+	toggleButtons(false);
 	strip.dataset.info = "";
 }
 
@@ -109,7 +109,12 @@ function resetColorFilters(indicator = null) {
 function setIndicator(e) {
 	if (e.target.id === "reset_range") {
 		resetColorFilters("resetor");
-		setTimeout(syncFilters, 150);
+		//setTimeout(syncFilters, 30);
+		const rows = document.querySelector(T_SELECTORS.tbody).getElementsByTagName("tr");
+		filter(rows, (el) => {
+			showHide(false, el);
+		});
+		//syncFilters();
 		return;
 	}
 
