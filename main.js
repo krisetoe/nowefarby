@@ -36,6 +36,7 @@ function syncFilters(e = null) {
 	const emptyChecked = document.querySelector(T_SELECTORS.checkEmpty).checked;
 
 	let inputText = input.value.toLowerCase();
+	let scaling = false;
 
 	if (e?.target.id === "input_filtruj") {
 		resetColorFilters("input");
@@ -57,6 +58,7 @@ function syncFilters(e = null) {
 			if (ind.style.display != "none" && ind.dataset.filtering === "strip") {
 				filterPatern += el.classList.contains("metalize") ? 0 : 1;
 				filterPatern += filterColor(colorPrev);
+				scaling = true;
 			}
 			if (ind.dataset.filtering === "metalic") {
 				filterPatern += el.classList.contains("metalize") ? 1 : 0;
@@ -74,7 +76,7 @@ function syncFilters(e = null) {
 
 		showHide(isOut, el);
 	});
-	toggleButtons(false);
+	toggleButtons(false, scaling);
 	strip.dataset.info = "";
 }
 
@@ -128,16 +130,17 @@ function setIndicator(e) {
 	setTimeout(moveIndTo, 250, e);
 }
 
-function toggleButtons(state = false) {
+function toggleButtons(state = false, scaling = false) {
 	if (typeof state !== "boolean") {
 		return;
 	}
 	const displayStat = state ? "hidden" : "visible";
-	plus.disabled = state;
-	minus.disabled = state;
+	const displayScaling = scaling ? "visible" : "hidden";
+	plus.disabled = !scaling;
+	minus.disabled = !scaling;
 	reset.disabled = state;
-	minus.style.visibility = displayStat;
-	plus.style.visibility = displayStat;
+	minus.style.visibility = displayScaling;
+	plus.style.visibility = displayScaling;
 	reset.style.visibility = displayStat;
 }
 
