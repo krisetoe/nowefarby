@@ -55,7 +55,7 @@ class FarbyXls
 	public $Tspec_colors; //Tablica nazw/indexow Pantone, kolorow o nietypowych indeksach/nazwach
 	public $Tspec_color_names; // Tablica nazw nietypowych i przyporządkowanych właściwych wartości dla danego koloru- wszystkie znaki małe;
 	public $css_class="";//klasy css dla tabeli (tag table)
-	private $max_rows = 550;//index ostatniej lini, do ktorej ma zostac wczytany arkusz z FARBY.xls
+	private $max_rows = 650;//index ostatniej lini, do ktorej ma zostac wczytany arkusz z FARBY.xls
 	public $Ttrash_val;
 	public $metalize_cs = "background-image: linear-gradient(-65deg, rgba(255,255,255,0.05), rgba(255,255,255,0.15), rgba(255,255,255,0.32), rgba(255,255,255,0.05),rgba(255,255,255,0.05), rgba(255,255,255,0.05), rgba(255,255,255,0.25),rgba(255,255,255,0.05), rgba(255,255,255,0.17),rgba(255,255,255,0.15),rgba(255,255,255,0.35), rgba(255,255,255,0.05)), radial-gradient(circle, rgba(255,255,255,0.5),rgba(255,255,255,0.05))";
 	public $css_class_metalize = "metalize";
